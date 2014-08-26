@@ -77,8 +77,8 @@ var path           = require('path'),
                 },
                 livereload: {
                     files: [
-                        'content/themes/casper/assets/css/*.css',
-                        'content/themes/casper/assets/js/*.js',
+                        'content/themes/martstheme/assets/css/*.css',
+                        'content/themes/martstheme/assets/js/*.js',
                         'core/client/assets/css/*.css',
                         'core/built/scripts/*.js'
                     ],
@@ -329,7 +329,7 @@ var path           = require('path'),
                     options: {
                         onlyUpdated: true,
                         exclude: 'node_modules,.git,.tmp,bower_components,content,*built,*test,*doc*,*vendor,' +
-                            'config.js,coverage.html,.travis.yml,*.min.css,screen.css',
+                            'config.js,coverage.html,.travis.yml,*.min.css,screen.css,style.css',
                         extras: ['fileSearch']
                     }
                 }
