@@ -197,6 +197,8 @@ a:hover {
 .profile-image img{
     width:auto;
     border: 2px solid #030574;
+    position:relative;
+    top: 20px;
 }
 footer {
     margin: 0px auto;
