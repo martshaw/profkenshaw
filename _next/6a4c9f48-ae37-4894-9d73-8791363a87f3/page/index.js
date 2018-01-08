@@ -1,0 +1,6 @@
+
+          window.__NEXT_REGISTER_PAGE('/', function() {
+            var comp = module.exports=webpackJsonp([3],{311:function(e,t,n){e.exports=n(312)},312:function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(t,"__esModule",{value:!0});var u=n(5),a=r(u),o=n(2),i=r(o),l=n(3),d=r(l),p=n(7),f=r(p),s=n(8),c=r(s),m=n(0),_=r(m),y=n(23),v=n(88),h=r(v),x=n(41),M=n(90),g=n(313),C=function(e){function t(){return(0,i.default)(this,t),(0,f.default)(this,(t.__proto__||(0,a.default)(t)).apply(this,arguments))}return(0,c.default)(t,e),(0,d.default)(t,[{key:"render",value:function(){return _.default.createElement(x.Layout,null,_.default.createElement(g.Container,null,_.default.createElement(M.App,{page:this.props.pageType})))}}]),t}(m.Component);t.default=(0,y.compose)(h.default,y.withApollo)(C)},313:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.Main=t.Container=void 0;var r=n(24);n(59),t.Container=(0,r.styled)("div",{maxWidth:"860px",margin:"0 auto"}),t.Main=(0,r.styled)("main",{"@media (max-width: 768px)":{margin:"0 1.5rem"}})},55:function(e,t){e.exports=require("styletron-server")}},[311]);
+            return { page: comp.default }
+          })
+        
