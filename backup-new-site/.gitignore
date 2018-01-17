@@ -1,6 +1,0 @@
-.DS_Store
-server
-node_modules
-gulp
-ncp-debug.log
-npm-debug.log
