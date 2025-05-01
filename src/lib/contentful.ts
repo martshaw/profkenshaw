@@ -1,10 +1,13 @@
-import { createClient } from "contentful"
+import { createClient, Entry, EntryCollection } from "contentful"
+import { remark } from "remark"
+import remarkHtml from "remark-html"
 
 // Check if required environment variables are defined
 const spaceId = process.env.CONTENTFUL_SPACE_ID
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN
 const previewAccessToken = process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
 const previewSecret = process.env.CONTENTFUL_PREVIEW_SECRET
+const isDebugMode = process.env.DEBUG_MODE === "true"
 
 // Validate environment variables
 if (!spaceId || !accessToken) {
@@ -61,8 +64,19 @@ export interface ContentfulImage {
 }
 
 export interface FooterContent {
-  contentfulTitle: string
+  contentfulTitle: string // Intentionally kept as is for backward compatibility
   footerContent: string
+}
+
+// Interface matching the Contentful Page content model
+export interface PageFields {
+  title: string
+  url: string
+  metaDescription?: string
+  metaKeyWords?: string
+  paragraph: string
+  image?: Entry<any>
+  footer?: Entry<any>
 }
 
 export interface PageContent {
@@ -74,6 +88,13 @@ export interface PageContent {
   image?: ContentfulImage
   footer?: FooterContent
   isDraft?: boolean
+}
+
+// Interface matching the Contentful PDF content model
+export interface PdfFields {
+  contentfullTitle: string // Intentionally kept as is for backward compatibility
+  pdfContents: string
+  slug: string
 }
 
 export interface PdfContent {
@@ -102,6 +123,17 @@ const defaultPages: Record<string, Partial<PageContent>> = {
   },
 }
 
+// Log helper that only logs in debug mode
+const debugLog = (message: string, data?: any) => {
+  if (isDebugMode) {
+    if (data) {
+      console.log(message, data)
+    } else {
+      console.log(message)
+    }
+  }
+}
+
 // Fetch a single page by url
 export async function getPageByUrl(url: string, preview = false): Promise<PageContent> {
   const contentfulClient = getClient(preview)
@@ -110,14 +142,89 @@ export async function getPageByUrl(url: string, preview = false): Promise<PageCo
     console.error("Contentful client not available. Check your environment variables.")
     return createDefaultPage(url)
   }
+  
+  // Debug available pages in Contentful when in debug mode
+  if (isDebugMode) {
+    try {
+      const allPages = await contentfulClient.getEntries({
+        content_type: "page",
+      })
+      debugLog("All available pages in Contentful:", 
+        allPages.items.map(page => ({
+          title: page.fields.title,
+          url: page.fields.url,
+        }))
+      )
+    } catch (error) {
+      debugLog("Error fetching all pages for debug:", error)
+    }
+  }
 
   try {
-    const response = await contentfulClient.getEntries({
+    // Try without query filtering first to get all pages
+    const allPagesResponse: EntryCollection<PageFields> = await contentfulClient.getEntries({
       content_type: "page",
-      "fields.url": url,
       include: 2,
     })
-
+    
+    // Normalize URL helper function
+    const normalizeUrl = (url: string): string => {
+      // Remove leading slash if present
+      let normalized = url.startsWith('/') ? url.substring(1) : url;
+      // Remove trailing slash if present
+      normalized = normalized.endsWith('/') ? normalized.slice(0, -1) : normalized;
+      // Convert to lowercase
+      return normalized.toLowerCase();
+    };
+    
+    // Find the page with matching URL using normalized comparison
+    const matchingPage = allPagesResponse.items.find(page => {
+      if (!page.fields.url) return false;
+      
+      const normalizedPageUrl = normalizeUrl(page.fields.url);
+      const normalizedRequestedUrl = normalizeUrl(url);
+      
+      debugLog(`Comparing normalized URLs: "${normalizedPageUrl}" vs "${normalizedRequestedUrl}"`);
+      
+      return normalizedPageUrl === normalizedRequestedUrl;
+    });
+    
+    let response: EntryCollection<PageFields>;
+    
+    if (matchingPage) {
+      // Found a match manually
+      debugLog(`Found matching page for ${url} with title: ${matchingPage.fields.title}`)
+      response = { 
+        items: [matchingPage],
+        includes: allPagesResponse.includes,
+        total: 1,
+        limit: 1,
+        skip: 0,
+      } as EntryCollection<PageFields>;
+    } else {
+      // If no manual match found, try query filtering (original approach)
+      debugLog(`No matching page found for ${url}, trying query filtering`)
+      
+      // First try exact match
+      response = await contentfulClient.getEntries({
+        content_type: "page",
+        "fields.url": url,
+        include: 2,
+      })
+      
+      // If no results, try with and without trailing slash
+      if (!response.items.length) {
+        const altUrl = url.endsWith('/') ? url.slice(0, -1) : `${url}/`;
+        response = await contentfulClient.getEntries({
+          content_type: "page",
+          "fields.url": altUrl,
+          include: 2,
+        });
+      }
+    }
+    
+    debugLog("Fetching page from Contentful:", response)
+    
     if (!response.items.length) {
       if (preview) {
         // In preview mode, we want to throw an error if the content doesn't exist
@@ -128,7 +235,7 @@ export async function getPageByUrl(url: string, preview = false): Promise<PageCo
     }
 
     const page = response.items[0]
-    const fields = page.fields as any
+    const fields = page.fields
 
     // Extract the image
     const imageFields = fields.image?.fields
@@ -136,9 +243,9 @@ export async function getPageByUrl(url: string, preview = false): Promise<PageCo
       ? {
           title: imageFields.title || "",
           description: imageFields.description || "",
-          url: imageFields.file.url || "",
-          width: imageFields.file.details.image.width || 1200,
-          height: imageFields.file.details.image.height || 600,
+          url: imageFields.file?.url ? `https:${imageFields.file.url}` : "", // Add https: prefix
+          width: imageFields.file?.details?.image?.width || 1200,
+          height: imageFields.file?.details?.image?.height || 600,
         }
       : undefined
 
@@ -200,7 +307,23 @@ export async function getAllPdfs(preview = false): Promise<PdfContent[]> {
   }
 
   try {
-    const response = await contentfulClient.getEntries({
+    // Add debug logs to trace content types
+    debugLog("Available content types check...")
+    
+    // First try to get content types to debug
+    if (isDebugMode) {
+      try {
+        const contentTypes = await contentfulClient.getContentTypes()
+        debugLog("Content types found:", contentTypes.items.map(type => ({
+          id: type.sys.id,
+          name: type.name
+        })))
+      } catch (error) {
+        debugLog("Error fetching content types:", error)
+      }
+    }
+    
+    const response: EntryCollection<PdfFields> = await contentfulClient.getEntries({
       content_type: "pdf",
       include: 1,
     })
@@ -210,7 +333,7 @@ export async function getAllPdfs(preview = false): Promise<PdfContent[]> {
     }
 
     return response.items.map((item) => {
-      const fields = item.fields as any
+      const fields = item.fields
 
       return {
         contentfullTitle: fields.contentfullTitle || "",
@@ -235,11 +358,41 @@ export async function getPdfBySlug(slug: string, preview = false): Promise<PdfCo
   }
 
   try {
-    const response = await contentfulClient.getEntries({
+    // Get all PDFs first
+    const allPdfsResponse: EntryCollection<PdfFields> = await contentfulClient.getEntries({
       content_type: "pdf",
-      "fields.slug": slug,
       include: 1,
     })
+    
+    // Normalize and compare slugs
+    const normalizeSlug = (s: string): string => s.toLowerCase().trim();
+    
+    const matchingPdf = allPdfsResponse.items.find(pdf => {
+      if (!pdf.fields.slug) return false;
+      return normalizeSlug(pdf.fields.slug) === normalizeSlug(slug);
+    });
+    
+    let response: EntryCollection<PdfFields>;
+    
+    if (matchingPdf) {
+      // Use the matching PDF
+      debugLog(`Found matching PDF for slug: ${slug}`);
+      response = {
+        items: [matchingPdf],
+        includes: allPdfsResponse.includes,
+        total: 1,
+        limit: 1,
+        skip: 0,
+      } as EntryCollection<PdfFields>;
+    } else {
+      // Fall back to original query approach
+      debugLog(`No matching PDF found for slug: ${slug}, trying query`);
+      response = await contentfulClient.getEntries({
+        content_type: "pdf",
+        "fields.slug": slug,
+        include: 1,
+      });
+    }
 
     if (!response.items.length) {
       if (preview) {
@@ -250,7 +403,7 @@ export async function getPdfBySlug(slug: string, preview = false): Promise<PdfCo
     }
 
     const pdf = response.items[0]
-    const fields = pdf.fields as any
+    const fields = pdf.fields
 
     return {
       contentfullTitle: fields.contentfullTitle || "",
@@ -268,23 +421,19 @@ export async function getPdfBySlug(slug: string, preview = false): Promise<PdfCo
   }
 }
 
+// The markdown processor - initialized once instead of dynamically importing each time
+const markdownProcessor = remark().use(remarkHtml)
+
 // Helper function to convert text to HTML
-export async function textToHtml(text: string) {
+export async function textToHtml(text: string): Promise<string> {
   try {
     // If text is empty or undefined, return an empty paragraph
     if (!text) {
       return "<p></p>"
     }
 
-    // Import remark and remark-html
-    const remarkModule = await import("remark")
-    const remarkHtmlModule = await import("remark-html")
-
-    // Create a new processor with the html plugin properly initialized
-    const processor = remarkModule.remark().use(remarkHtmlModule.default)
-
     // Process the markdown text
-    const result = await processor.process(text)
+    const result = await markdownProcessor.process(text)
 
     // Return the HTML string
     return result.toString()
