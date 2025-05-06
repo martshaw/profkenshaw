@@ -22,7 +22,7 @@ export default function Banner({ image }: BannerProps) {
         className="banner-image object-cover"
         priority
       />
-      <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+      <div className="absolute inset-0 bg-black/20"></div>
     </div>
   )
 }

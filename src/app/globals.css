@@ -1,1 +1,373 @@
 @import "tailwindcss";
+
+
+.footer {
+  @apply text-[#666] clear-both mx-auto my-0 px-0 py-[0.625em] border-t-[0.1em] border-t-[#666] border-dashed;
+}
+html {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  @apply m-0 text-[rgba(0,0,0,0.8)] font-normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+  @apply block;
+}
+audio,
+canvas,
+progress,
+video {
+  @apply inline-block;
+}
+audio:not([controls]) {
+  @apply hidden h-0;
+}
+progress {
+  @apply align-baseline;
+}
+[hidden],
+template {
+  @apply hidden;
+}
+a {
+  @apply bg-transparent text-[#030574] transition-[color] duration-[0.4s] ease-[ease-in-out] no-underline hover:text-[#006a95];
+  -webkit-text-decoration-skip: objects;
+}
+a:active,
+a:hover {
+  @apply outline-0;
+}
+abbr[title] {
+  @apply underline border-b-[none] no-underline;
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+}
+b,
+strong {
+  @apply font-[inherit] font-[bolder];
+}
+dfn {
+  @apply italic;
+}
+h1 {
+  @apply text-[2em] mx-0 my-[0.67em] text-4xl;
+}
+mark {
+  @apply bg-[#ff0] text-black;
+}
+small {
+  @apply text-[80%];
+}
+sub,
+sup {
+  @apply text-[75%] leading-[0] relative align-baseline;
+}
+sub {
+  @apply bottom-[-0.25em];
+}
+sup {
+  @apply top-[-0.5em];
+}
+img {
+  @apply border-none max-w-full mt-0 mb-[1.45rem] mx-0 p-0;
+}
+svg:not(:root) {
+  @apply overflow-hidden;
+}
+code,
+kbd,
+pre,
+samp {
+  @apply text-[1em];
+  font-family: monospace, monospace;
+}
+figure {
+  @apply mx-10 my-[1em];
+}
+hr {
+  @apply box-content h-0 overflow-visible h-px p-0 border-[none];
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  @apply m-0;
+  font: inherit;
+}
+optgroup {
+  @apply font-bold;
+}
+button,
+input {
+  @apply overflow-visible;
+}
+button,
+select {
+  @apply normal-case;
+}
+[type="reset"],
+[type="submit"],
+button,
+html [type="button"] {
+  -webkit-appearance: button;
+}
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner,
+button::-moz-focus-inner {
+  @apply p-0 border-none;
+}
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring,
+button:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+fieldset {
+  @apply border mx-0.5 my-0 pt-[0.35em] pb-[0.75em] px-[0.625em] border-solid border-[silver];
+}
+legend {
+  @apply box-border text-inherit table max-w-full whitespace-normal p-0;
+}
+textarea {
+  @apply overflow-auto;
+}
+[type="checkbox"],
+[type="radio"] {
+  @apply box-border p-0;
+}
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  @apply h-auto;
+}
+[type="search"] {
+  @apply -outline-offset-2;
+  -webkit-appearance: textfield;
+}
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+::-webkit-input-placeholder {
+  @apply text-inherit opacity-[0.54];
+}
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+html {
+  @apply box-border overflow-y-scroll;
+  font: 112.5%/1.45em georgia, serif;
+}
+*,
+:after,
+:before {
+  box-sizing: inherit;
+}
+body {
+  font-family: georgia, serif;
+  word-wrap: break-word;
+  font-kerning: normal;
+  -ms-font-feature-settings: "kern", "liga", "clig", "calt";
+  font-feature-settings: "kern", "liga", "clig", "calt";
+}
+h1,
+h2 {
+  @apply text-inherit font-bold leading-[1.1] mt-0 mb-[1.45rem] mx-0 p-0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+h2 {
+  @apply text-[1.62671rem];
+}
+h3 {
+  @apply text-[1.38316rem];
+}
+h3,
+h4 {
+  @apply text-inherit font-bold leading-[1.1] mt-0 mb-[1.45rem] mx-0 p-0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+h4 {
+  @apply text-base;
+}
+h5 {
+  @apply text-[0.85028rem];
+}
+h5,
+h6 {
+  @apply text-inherit font-bold leading-[1.1] mt-0 mb-[1.45rem] mx-0 p-0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+h6 {
+  @apply text-[0.78405rem];
+}
+hgroup {
+  @apply mt-0 mb-[1.45rem] mx-0 p-0;
+}
+ol,
+ul {
+  @apply list-outside ml-[1.45rem] mr-0 mt-0 mb-[1.45rem] p-0;
+  list-style-image: none;
+}
+
+dd,
+dl,
+figure,
+p {
+  @apply mt-0 mb-[1.45rem] mx-0 p-0;
+}
+pre {
+  @apply text-[0.85rem] leading-[1.42] overflow-auto mt-0 mb-[1.45rem] mx-0 p-[1.45rem] rounded-[3px];
+  background: rgba(0, 0, 0, 0.04);
+  word-wrap: normal;
+}
+table {
+  @apply text-base leading-[1.45rem] w-full border-collapse;
+}
+fieldset,
+table {
+  @apply mt-0 mb-[1.45rem] mx-0 p-0;
+}
+blockquote {
+  @apply mt-0 mb-[1.45rem] mx-[1.45rem] p-0;
+}
+form,
+iframe,
+noscript {
+  @apply mt-0 mb-[1.45rem] mx-0 p-0;
+}
+hr {
+  margin: 0 0 calc(1.45rem - 1px);
+  background: rgba(0, 0, 0, 0.2);
+}
+address {
+  @apply mt-0 mb-[1.45rem] mx-0 p-0;
+}
+b,
+dt,
+strong,
+th {
+  @apply font-bold;
+}
+ol li,
+ul li {
+  @apply pl-0 list-outside list-disc;
+}
+ul li {
+  @apply pr-5;
+}
+li > ol,
+li > ul {
+  @apply ml-[1.45rem] my-[0.725rem];
+}
+ol li {
+  @apply list-decimal mr-5;
+}
+blockquote :last-child,
+li :last-child,
+p :last-child {
+  @apply mb-0;
+}
+li > p {
+  @apply mb-[0.725rem];
+}
+code,
+kbd,
+samp {
+  @apply text-[0.85rem] leading-[1.45rem];
+}
+abbr,
+abbr[title],
+acronym {
+  @apply cursor-help border-b-[rgba(0,0,0,0.5)] border-b border-dotted;
+}
+td,
+th,
+thead {
+  @apply text-left;
+}
+td,
+th {
+  @apply border-b-[rgba(0,0,0,0.12)] border-b border-solid;
+  font-feature-settings: "tnum";
+  -moz-font-feature-settings: "tnum";
+  -ms-font-feature-settings: "tnum";
+  -webkit-font-feature-settings: "tnum";
+  padding: 0.725rem 0.96667rem calc(0.725rem - 1px);
+}
+td:first-child,
+th:first-child {
+  @apply pl-0;
+}
+td:last-child,
+th:last-child {
+  @apply pr-0;
+}
+code,
+tt {
+  @apply bg-[rgba(0,0,0,0.04)] px-0 py-[0.2em] rounded-[3px];
+  font-family: SFMono-Regular, Consolas, Roboto Mono, Droid Sans Mono,
+    Liberation Mono, Menlo, Courier, monospace;
+}
+pre code {
+  @apply leading-[1.42];
+  background: none;
+}
+code:after,
+code:before,
+tt:after,
+tt:before {
+  @apply tracking-[-0.2em] content-["_"];
+}
+pre code:after,
+pre code:before,
+pre tt:after,
+pre tt:before {
+  @apply content-[""];
+}
+@media only screen and (max-width: 480px) {
+  html {
+    @apply text-[100%];
+  }
+}
+footer {
+  @apply border-t-[0.1em] border-t-[#666] border-dashed;
+}
+.container {
+  @apply leading-[1.6] w-auto;
+}
+.inner {
+  @apply mx-0 my-6 px-[1.25em] py-0;
+}
+.profileImage {
+  @apply w-1/5 float-right inline-block mx-[2.25em] my-0;
+}
+.profileImage img {
+  @apply max-w-[51em] mt-[-1em] mr-[-1.25em] mb-[-1em] ml-[-1.25em] relative border-2 border-solid border-[#030574] top-5;
+}
+.footer p {
+  @apply m-0;
+}
+
