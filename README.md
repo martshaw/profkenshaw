@@ -18,19 +18,19 @@ _Have another more specific idea? You may want to check out our vibrant collecti
 
     Use the Gatsby CLI to create a new site, specifying the default starter.
 
-    ```sh
+    \`\`\`sh
     # create a new Gatsby site using the default starter
     gatsby new my-default-starter https://github.com/gatsbyjs/gatsby-starter-default
-    ```
+    \`\`\`
 
 1.  **Start developing.**
 
     Navigate into your new site’s directory and start it up.
 
-    ```sh
+    \`\`\`sh
     cd my-default-starter/
     gatsby develop
-    ```
+    \`\`\`
 
 1.  **Open the source code and start editing!**
 

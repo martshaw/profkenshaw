@@ -1,6 +1,7 @@
 import Banner from "@/components/banner"
 import ContentfulFooter from "@/components/contentful-footer"
 import PreviewBanner from "@/components/preview-banner"
+import { Card, CardContent } from "@/components/ui/card"
 import { textToHtml } from "@/lib/contentful"
 import { getCachedPageByUrl } from "@/lib/cache"
 import { draftMode } from "next/headers"
@@ -61,19 +62,31 @@ export default async function About() {
       <div>
         <PreviewBanner isDraft={page.isDraft} />
         {page.image && <Banner image={page.image} />}
-        <div className="content-section">
-          <h1>{page.title || "About Professor K M Shaw"}</h1>
-          {!page.image && !isDraftMode && (
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
-              <p className="font-bold">Content Notice</p>
-              <p>
-                This page is using default content. Please add a page with URL "/about" in Contentful to customize this
-                content.
-              </p>
-            </div>
-          )}
-          <div className="about-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl font-bold text-gray-900 mb-8">
+              {page.title?.replace(" - Professor K M Shaw", "") || "About Professor K M Shaw"}
+            </h1>
+
+            {!page.image && !isDraftMode && (
+              <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+                <p className="font-bold">Content Notice</p>
+                <p>
+                  This page is using default content. Please add a page with URL "/about" in Contentful to customize
+                  this content.
+                </p>
+              </div>
+            )}
+
+            <Card>
+              <CardContent className="p-8">
+                <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+              </CardContent>
+            </Card>
+          </div>
         </div>
+
         {page.footer && <ContentfulFooter footer={page.footer} />}
       </div>
     )
